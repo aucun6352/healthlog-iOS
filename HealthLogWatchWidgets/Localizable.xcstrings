@@ -14,6 +14,12 @@
             "state": "translated",
             "value": "All done"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모두 완료"
+          }
         }
       }
     },
@@ -29,6 +35,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Health score"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "건강 점수"
           }
         }
       }
@@ -46,6 +58,12 @@
             "state": "translated",
             "value": "Latest measurement"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "최근 측정"
+          }
         }
       }
     },
@@ -61,6 +79,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Next dose"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다음 복용"
           }
         }
       }
@@ -78,6 +102,12 @@
             "state": "translated",
             "value": "No measurements yet"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "아직 측정값이 없어요"
+          }
         }
       }
     },
@@ -93,6 +123,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open iPhone app"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone 앱 열기"
           }
         }
       }
@@ -110,6 +146,12 @@
             "state": "translated",
             "value": "Your latest Personal Health Score."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "최근 개인 건강 점수예요."
+          }
         }
       }
     },
@@ -126,6 +168,12 @@
             "state": "translated",
             "value": "Your most recent measurement reading."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "가장 최근 측정값이에요."
+          }
         }
       }
     },
@@ -141,6 +189,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your next medication dose and today's adherence."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다음 복용 예정 약과 오늘의 복약 순응도예요."
           }
         }
       }

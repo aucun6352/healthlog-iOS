@@ -15,6 +15,12 @@
             "state" : "translated",
             "value" : "Medication reminder"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "복약 알림"
+          }
         }
       }
     },
@@ -31,6 +37,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "It's time for your medication."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "약 먹을 시간이에요."
           }
         }
       }

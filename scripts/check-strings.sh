@@ -8,7 +8,7 @@
 #      nennt, ist eine Katalogleiche. „Nennen" heißt hier mehr als ein
 #      wörtliches Literal — siehe den Abschnitt unten.
 #   2. **Fehlende Übersetzungen.** Jeder Eintrag mit Lokalisierungen braucht
-#      `de` UND `en` (DE primär, EN Parität — PROJECT_GUIDE.md).
+#      `de`, `en` UND `ko` (DE primär, EN und KO Parität — PROJECT_GUIDE.md).
 #   3. **Mojibake.** Doppelt kodierte UTF-8-Sequenzen (`flieãŸen` statt
 #      `fließen`).
 #
@@ -290,12 +290,12 @@ unreferenced = {key for key in entries if referenced(key) is None}
 tolerated = server_provided | test_anchored | known_orphans
 
 # ---------------------------------------------------------------- Übersetzungen
-missing = {"de": [], "en": []}
+missing = {"de": [], "en": [], "ko": []}
 for key, entry in entries.items():
     localizations = entry.get("localizations")
     if not localizations:
         continue  # Quellsprache-Only-Eintrag; EmptyTranslationGuardTests deckt das ab.
-    for lang in ("de", "en"):
+    for lang in ("de", "en", "ko"):
         block = localizations.get(lang) or {}
         has_text = bool((block.get("stringUnit") or {}).get("value"))
         if not has_text and not block.get("variations"):
@@ -388,10 +388,10 @@ if missing_anchors:
     for key in missing_anchors:
         print(f"    {key}")
 
-for lang in ("de", "en"):
+for lang in ("de", "en", "ko"):
     if missing[lang]:
         problems += len(missing[lang])
-        print(f"\n✗ {len(missing[lang])} Einträge ohne `{lang}`-Übersetzung (DE primär, EN Parität):")
+        print(f"\n✗ {len(missing[lang])} Einträge ohne `{lang}`-Übersetzung (DE primär, EN und KO Parität):")
         for key in sorted(missing[lang])[:40]:
             print(f"    {key}")
 

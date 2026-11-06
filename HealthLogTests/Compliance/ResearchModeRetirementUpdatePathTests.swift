@@ -125,7 +125,7 @@
             let catalogue = try Self.stringCatalogue()
             let languages = Self.languages(in: catalogue)
             #expect(
-                languages == ["de", "en"],
+                languages == ["de", "en", "ko"],
                 "the catalogue's language set moved; extend this census before shipping"
             )
 
@@ -245,7 +245,7 @@
                 let entry = try #require(catalogue[key], "the MDR chart copy was deleted with the gate: \(key)")
                 let localizations = try #require(entry["localizations"] as? [String: Any])
                 #expect(
-                    Set(localizations.keys) == ["de", "en"],
+                    Set(localizations.keys) == ["de", "en", "ko"],
                     "the MDR chart copy lost a language: \(key)"
                 )
             }
@@ -313,6 +313,9 @@
                 || lowered.contains("researchmode")
                 || lowered.contains("forschungsmodus")
                 || lowered.contains("drug-level view")
+                || lowered.contains("연구 모드")
+                || lowered.contains("연구모드")
+                || lowered.contains("약물 농도 보기")
         }
 
         static func markRed(case identifier: String, detail: String) {
