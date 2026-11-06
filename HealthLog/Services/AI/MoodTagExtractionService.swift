@@ -284,11 +284,25 @@ enum MoodTagExtractionPrompt {
             existingClause = ""
         } else {
             let joined = existingTags.joined(separator: ", ")
-            existingClause = language == "en"
-                ? "\n\nTags already on the entry (do NOT repeat): \(joined)"
-                : "\n\nBereits gesetzte Tags (NICHT wiederholen): \(joined)"
+            existingClause = switch language {
+            case "en": "\n\nTags already on the entry (do NOT repeat): \(joined)"
+            case "ko": "\n\n이미 붙은 태그(반복하지 마): \(joined)"
+            default: "\n\nBereits gesetzte Tags (NICHT wiederholen): \(joined)"
+            }
         }
         switch language {
+        case "ko":
+            return """
+            한국어 기분 기록 사용자의 자유 메모:
+            \"\"\"
+            \(rawNote)
+            \"\"\"\(existingClause)
+
+            메모에서 다룬 주제를 나타내는 짧은 태그를 최대 5개 뽑아(각 1~2단어, 문장 금지). \
+            중립적이고 묘사적인 태그만 써. \
+            아무것도 진단하지 마. 아무것도 권하지 마. 아무것도 예측하지 마. \
+            깔끔하게 뽑을 것이 없으면 빈 목록을 돌려줘.
+            """
         case "en":
             return """
             Free-text mood note from a German/English health-journal user:
@@ -322,6 +336,23 @@ enum MoodTagExtractionPrompt {
         static func instructions(locale: Locale) -> Instructions {
             let language = locale.language.languageCode?.identifier ?? "de"
             switch language {
+            case "ko":
+                return Instructions {
+                    """
+                    너는 한국어 기분 기록 앱의 어휘 추출 도구야. \
+                    네 유일한 일은 자유 기분 메모에서 짧은 태그를 뽑는 것이다.
+
+                    절대 원칙:
+                    - 짧은 태그만 출력한다(각 1~2단어, 문장은 절대 안 됨).
+                    - 진단, 예측, 처방을 하지 않는다.
+                    - 질환, 질병, 증상을 임상 용어로 언급하지 않는다.
+                    - 행동을 권하지 않는다.
+                    - 수치 사이의 인과 관계를 암시하지 않는다.
+                    - 깔끔하게 뽑을 것이 없으면 빈 목록을 돌려준다. 태그를 지어내지 않는다.
+
+                    문체: 조언이 아니라 어휘 추출. 너는 의사가 아니라 주제 추출기다.
+                    """
+                }
             case "en":
                 return Instructions {
                     """

@@ -58,7 +58,8 @@ public extension MutationKind {
                 .insightsComprehensive,
                 .insightsCards,
                 .metricInsights(kind: kind, locale: "de"),
-                .metricInsights(kind: kind, locale: "en")
+                .metricInsights(kind: kind, locale: "en"),
+                .metricInsights(kind: kind, locale: "ko")
             ]
         case .moodEntryChange:
             [

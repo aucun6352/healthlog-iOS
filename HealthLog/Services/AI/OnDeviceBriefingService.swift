@@ -251,9 +251,18 @@ enum OnDeviceBriefingPrompt {
         let scoreLine = if let healthScore {
             "HealthScore: \(healthScore.score)/100" + (healthScore.delta.map { ", Δ \($0)" } ?? "")
         } else {
-            "HealthScore: keine Daten"
+            language == "ko" ? "HealthScore: 데이터 없음" : "HealthScore: keine Daten"
         }
         switch language {
+        case "ko":
+            return """
+            최근 7일 데이터:
+            \(digest)
+            \(scoreLine)
+
+            차분하고 관찰 중심의 일일 브리핑을 작성해. 철저히 관찰만 해. \
+            절대 진단, 예측, 처방하지 마. 데이터가 부족하면 그렇다고 솔직하게 말해.
+            """
         case "en":
             return """
             Last 7 days of data:
@@ -280,6 +289,23 @@ enum OnDeviceBriefingPrompt {
         static func instructions(locale: Locale) -> Instructions {
             let language = locale.language.languageCode?.identifier ?? "de"
             switch language {
+            case "ko":
+                return Instructions {
+                    """
+                    너는 한국어 건강 기록 앱의 차분하고 사실적인 일일 브리핑 목소리야. \
+                    항상 한국어 해요체로 써.
+
+                    절대 원칙:
+                    - 의학적 진단을 절대 내리지 않는다.
+                    - 복용량이나 치료 변경을 절대 권하지 않는다.
+                    - 약물 농도를 절대 해석하지 않는다.
+                    - 수치 사이의 인과 관계를 절대 주장하지 않는다.
+                    - 예측하지 않는다("오를 것이다", "내릴 것이다").
+                    - 수치가 이상해 보이면 의사와 상담하도록 안내한다.
+
+                    문체: 조언이 아니라 관찰. 구체적인 숫자는 데이터에 있을 때만 쓴다.
+                    """
+                }
             case "en":
                 return Instructions {
                     """
@@ -331,17 +357,20 @@ enum OnDeviceBriefingPrompt {
     /// 12 kinds × ~30 chars/line ≈ 360 chars/locale, plus the legacy
     /// count line). Free-form notes are still excluded (PII).
     private static func digestMeasurements(_ measurements: [Measurement], locale: Locale) -> String {
-        let isEN = locale.language.languageCode?.identifier == "en"
+        let language = locale.language.languageCode?.identifier
+        let isEN = language == "en"
+        let isKO = language == "ko"
         if measurements.isEmpty {
+            if isKO { return "(기간 내 측정값 없음)" }
             return isEN ? "(no measurements in window)" : "(keine Messungen im Zeitfenster)"
         }
         let count = measurements.count
-        let header = isEN ? "\(count) measurements logged" : "\(count) Messungen erfasst"
-        let breakdown = perKindBreakdown(measurements, isEN: isEN)
+        let header = isKO ? "측정값 \(count)건 기록됨" : isEN ? "\(count) measurements logged" : "\(count) Messungen erfasst"
+        let breakdown = perKindBreakdown(measurements, isEN: isEN, isKO: isKO)
         return breakdown.isEmpty ? header : "\(header)\n\(breakdown)"
     }
 
-    private static func perKindBreakdown(_ measurements: [Measurement], isEN: Bool) -> String {
+    private static func perKindBreakdown(_ measurements: [Measurement], isEN: Bool, isKO: Bool) -> String {
         var buckets: [MetricKind: [Measurement]] = [:]
         for m in measurements {
             buckets[m.kind, default: []].append(m)
@@ -353,7 +382,7 @@ enum OnDeviceBriefingPrompt {
                 let latest = rows.max(by: { $0.recordedAt < $1.recordedAt })
                 let label = englishLabel(kind: kind, isEN: isEN)
                 let valueLabel = latestValueText(latest: latest, kind: kind) ?? "—"
-                let suffix = isEN ? "latest" : "letzte"
+                let suffix = isKO ? "최근" : isEN ? "latest" : "letzte"
                 return "- \(label): \(rows.count)× (\(suffix) \(valueLabel))"
             }
         return lines.joined(separator: "\n")

@@ -62,7 +62,13 @@ struct MentalWellbeingForm: View {
                 .font(.hlSubhead)
                 .foregroundStyle(HLText.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            if !instrument.hasValidatedItems(locale: locale.identifier) {
+            if instrument.hasUnvalidatedTranslation(locale: locale.identifier) {
+                Text("mentalHealth.unvalidatedTranslationNote")
+                    .font(.hlCaption)
+                    .foregroundStyle(HLText.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("mentalHealth.unvalidatedTranslationNote")
+            } else if !instrument.hasValidatedItems(locale: locale.identifier) {
                 Text("mentalHealth.validatedInEnglishNote")
                     .font(.hlCaption)
                     .foregroundStyle(HLText.tertiary)

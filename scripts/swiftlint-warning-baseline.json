@@ -1069,7 +1069,7 @@
     },
     {
       "file": "HealthLog/Services/AI/MiniCoachDataBinder.swift",
-      "line": 218,
+      "line": 252,
       "character": 13,
       "rule_id": "function_body_length",
       "reason": "Function body should span 60 lines or less excluding comments and whitespace: currently spans 83 lines",
@@ -1269,7 +1269,7 @@
     },
     {
       "file": "HealthLog/Services/PDF/DoctorReportSectionDrawer.swift",
-      "line": 519,
+      "line": 354,
       "character": 13,
       "rule_id": "cyclomatic_complexity",
       "reason": "Function should have complexity 12 or less; currently complexity is 18",

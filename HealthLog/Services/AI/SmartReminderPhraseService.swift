@@ -298,6 +298,20 @@ enum SmartReminderPhrasePrompt {
         let cappedStreak = max(0, min(context.streakDays, 7))
         let slotLabel = slotLabel(context.slot, language: language)
         switch language {
+        case "ko":
+            return """
+            알림 맥락:
+            - 약: \(context.medicationName)
+            - 시간대: \(slotLabel)
+            - 연속 복용일(최대 7): \(cappedStreak)
+            - 이전 복용 놓침: \(context.missedPrevious ? "예" : "아니요")
+
+            짧은 알림 제목 하나와 선택적인 보조 문장 하나를 써. \
+            철저히 일정 알림으로만 써. 복용량 조언, 치료 변경, \
+            진단, 예측, 약물 농도 해석은 절대 넣지 마. \
+            연속 복용일이 0보다 크면 부드럽고 긍정적인 한마디를 써도 돼. 이전 복용을 놓쳤다면 \
+            부드럽게 챙기라는 한마디를 써도 돼. 그 밖에는 본문을 비워도 돼.
+            """
         case "en":
             return """
             Reminder context:
@@ -334,6 +348,8 @@ enum SmartReminderPhrasePrompt {
         static func instructions(locale: Locale) -> Instructions {
             let language = locale.language.languageCode?.identifier ?? "de"
             switch language {
+            case "ko":
+                return koreanInstructions()
             case "en":
                 return Instructions {
                     """
@@ -377,24 +393,68 @@ enum SmartReminderPhrasePrompt {
                 }
             }
         }
+
+        /// Korean instructions, split out for the function-body budget.
+        @available(iOS 26.0, *)
+        private static func koreanInstructions() -> Instructions {
+            Instructions {
+                """
+                너는 한국어 건강 기록 앱의 짧은 일정 알림 문구를 쓴다. \
+                항상 한국어 해요체로 쓴다.
+
+                네 유일한 일: 약 복용 시간 알림에 쓸 짧은 제목과 선택적인 보조 문장을 만드는 것.
+
+                절대 원칙:
+                - 이것은 일정 알림이지 의학적 조언이 아니다.
+                - 어떤 용량을 먹으라거나 치료를 바꾸라고 절대 말하지 않는다.
+                - 질환을 진단하거나 암시하지 않는다.
+                - 결과를 예측하지 않는다("오를 것이다", "내릴 것이다").
+                - 약물 농도, 반감기, 약동학을 해석하지 않는다.
+                - 맥락에 없는 숫자를 지어내지 않는다.
+                - 제목은 40자 이내, 본문은 80자 이내.
+
+                문체: 차분하고 친근한 해요체. 약 이름을 그대로 부른다. \
+                시간대를 문구의 기준으로 쓴다. 군더더기보다 빈 본문이 낫다.
+                """
+            }
+        }
     #endif
 
     private static func slotLabel(_ slot: ReminderPhraseContext.Slot, language: String) -> String {
-        if language == "en" {
-            switch slot {
-            case .morning: return "morning"
-            case .noon: return "noon"
-            case .afternoon: return "afternoon"
-            case .evening: return "evening"
-            case .night: return "night"
-            }
+        switch language {
+        case "ko": koreanSlotLabel(slot)
+        case "en": englishSlotLabel(slot)
+        default: germanSlotLabel(slot)
         }
+    }
+
+    private static func koreanSlotLabel(_ slot: ReminderPhraseContext.Slot) -> String {
         switch slot {
-        case .morning: return "Morgen"
-        case .noon: return "Mittag"
-        case .afternoon: return "Nachmittag"
-        case .evening: return "Abend"
-        case .night: return "Nacht"
+        case .morning: "아침"
+        case .noon: "점심"
+        case .afternoon: "오후"
+        case .evening: "저녁"
+        case .night: "밤"
+        }
+    }
+
+    private static func englishSlotLabel(_ slot: ReminderPhraseContext.Slot) -> String {
+        switch slot {
+        case .morning: "morning"
+        case .noon: "noon"
+        case .afternoon: "afternoon"
+        case .evening: "evening"
+        case .night: "night"
+        }
+    }
+
+    private static func germanSlotLabel(_ slot: ReminderPhraseContext.Slot) -> String {
+        switch slot {
+        case .morning: "Morgen"
+        case .noon: "Mittag"
+        case .afternoon: "Nachmittag"
+        case .evening: "Abend"
+        case .night: "Nacht"
         }
     }
 }

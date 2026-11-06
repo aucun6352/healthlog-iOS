@@ -212,17 +212,37 @@ public enum MentalHealthInstrument: String, Codable, Sendable, CaseIterable, Ide
         case .sci:
             ["en"]
         case .phq9, .gad7, .who5:
-            ["de", "en", "es", "fr", "it", "pl"]
+            ["de", "en", "es", "fr", "it", "pl", "ko"]
+        }
+    }
+
+    /// Locales whose item wording is HealthLog's own translation rather than a
+    /// validated one, mirroring the server's `validated: false` wording files
+    /// (`src/lib/mental-health/wording/sci/ko.ts`). The form shows these items
+    /// translated, with the unvalidated-translation note.
+    public var unvalidatedTranslationLocales: Set<String> {
+        switch self {
+        case .sci:
+            ["ko"]
+        case .phq9, .gad7, .who5:
+            []
         }
     }
 
     public func hasValidatedItems(locale: String) -> Bool {
-        let base = locale
+        validatedItemLocales.contains(Self.baseLanguage(locale))
+    }
+
+    public func hasUnvalidatedTranslation(locale: String) -> Bool {
+        unvalidatedTranslationLocales.contains(Self.baseLanguage(locale))
+    }
+
+    private static func baseLanguage(_ locale: String) -> String {
+        locale
             .lowercased()
             .split(whereSeparator: { $0 == "-" || $0 == "_" })
             .first
             .map(String.init) ?? locale.lowercased()
-        return validatedItemLocales.contains(base)
     }
 
     public var attribution: String {

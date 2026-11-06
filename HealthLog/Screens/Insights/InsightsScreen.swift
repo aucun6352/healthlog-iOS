@@ -254,7 +254,7 @@ struct InsightsScreen: View {
             // v1.25 — revalidate the clinical-signal awareness cards.
             async let clinicalSignals: Void = backend.hasServer ? clinicalSignalsStore.refresh() : ()
             // I-3 ITEM 5 — revalidate the touched retrospective period(s) too.
-            let narrativeLocale = Locale.current.language.languageCode?.identifier == "en" ? "en" : "de"
+            let narrativeLocale = Self.narrativeLocaleCode
             async let narrative: Void = backend.hasServer
                 ? narrativeStore.refresh(locale: narrativeLocale)
                 : ()
@@ -396,10 +396,20 @@ struct InsightsScreen: View {
     @MainActor
     private func loadOverviewNarrative() async {
         guard backend.hasServer else { return }
-        let locale = Locale.current.language.languageCode?.identifier == "en" ? "en" : "de"
+        let locale = Self.narrativeLocaleCode
         let needsCorrectiveRetry = narrativeStore.hasSettled(.week)
             && narrativeStore.narrative(for: .week) == nil
         await narrativeStore.load(period: .week, locale: locale, force: needsCorrectiveRetry)
+    }
+
+    /// The narrative's language: the app's own (`de` / `en` / `ko`), German
+    /// for any other system language.
+    static var narrativeLocaleCode: String {
+        switch Locale.current.language.languageCode?.identifier {
+        case "en": "en"
+        case "ko": "ko"
+        default: "de"
+        }
     }
 }
 

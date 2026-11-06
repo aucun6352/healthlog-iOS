@@ -173,7 +173,7 @@ enum ChartsAccessibility {
             point.value.formatted(.number.precision(.fractionLength(0 ... 1)))
         }
         return String(
-            localized: "\(dateString): \(valueString) \(kind.unit)"
+            localized: "\(dateString): \(valueString) \(MetricKind.displayUnitLabel(kind.unit))"
         )
     }
 }

@@ -80,6 +80,15 @@ public actor MiniCoachAskClassifier {
                 reason: .adviceRequest,
                 label: "advice_en"
             ),
+            // Korean (1.4 ko) — no `\b`: Hangul sits outside it and particles attach.
+            DenyPattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"(어떻게|뭘|무엇을)\s*해야|해야\s*(할까|하나|돼|되나|합니까|할지)|하는\s*게\s*좋(을까|아|나|은가)|추천해\s*(줘|주세요)|권해\s*(줘|주세요)|조언|어떻게\s*하면\s*(좋|나아|개선|건강)"#,
+                    options: .caseInsensitive
+                ),
+                reason: .adviceRequest,
+                label: "advice_ko"
+            ),
             // Prediction requests.
             DenyPattern(
                 regex: try! NSRegularExpression(
@@ -97,6 +106,14 @@ public actor MiniCoachAskClassifier {
                 ),
                 reason: .predictionRequest,
                 label: "prediction_en"
+            ),
+            DenyPattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"(오를까|올라갈까|내려갈까|떨어질까|높아질까|낮아질까|늘어날까|줄어들까|좋아질까|나빠질까|예측|전망)|(앞으로|다음\s*(주|달)|내일)[^?]{0,20}(까|어떻게)"#,
+                    options: .caseInsensitive
+                ),
+                reason: .predictionRequest,
+                label: "prediction_ko"
             ),
             // Prompt-injection markers — bracketed instructions, role
             // overrides, "ignore previous". Same shape as the
@@ -117,6 +134,14 @@ public actor MiniCoachAskClassifier {
                 ),
                 reason: .promptInjection,
                 label: "injection_de"
+            ),
+            DenyPattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"(이전|앞의|앞선|모든|위의)\s*(지시|지침|규칙|명령|프롬프트)[^.!?]{0,6}(무시|잊)|다른\s*역할|역할을\s*바꿔|처럼\s*행동해"#,
+                    options: .caseInsensitive
+                ),
+                reason: .promptInjection,
+                label: "injection_ko"
             )
         ]
     // swiftlint:enable force_try
@@ -135,6 +160,14 @@ public actor MiniCoachAskClassifier {
                 category: .comparison,
                 label: "compare"
             ),
+            Pattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"비교|대비|보다\s*(높|낮|많|적)"#,
+                    options: .caseInsensitive
+                ),
+                category: .comparison,
+                label: "compare_ko"
+            ),
             // Historic — explicit past date phrasing.
             Pattern(
                 regex: try! NSRegularExpression(
@@ -148,6 +181,14 @@ public actor MiniCoachAskClassifier {
                 category: .historicLookup,
                 label: "historic"
             ),
+            Pattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"\d{1,2}\s*월\s*\d{1,2}\s*일|지난\s*(달|해|분기)|작년|저번\s*달"#,
+                    options: .caseInsensitive
+                ),
+                category: .historicLookup,
+                label: "historic_ko"
+            ),
             // Period summary — "wie war meine woche", "how was my week".
             Pattern(
                 regex: try! NSRegularExpression(
@@ -158,6 +199,14 @@ public actor MiniCoachAskClassifier {
                 ),
                 category: .periodSummary,
                 label: "period"
+            ),
+            Pattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"(이번|지난)\s*(주|한\s*주|달|한\s*달)|(일주일|한\s*주|한\s*달)\s*(동안|요약|어땠)|(주간|월간)\s*(요약|정리)"#,
+                    options: .caseInsensitive
+                ),
+                category: .periodSummary,
+                label: "period_ko"
             ),
             // Data lookup — "letzter Wert", "current", "highest",
             // direct metric names, "was ist mein". Permissive
@@ -172,6 +221,14 @@ public actor MiniCoachAskClassifier {
                 category: .dataLookup,
                 label: "lookup_phrasing"
             ),
+            Pattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"최근|마지막|가장\s*(높|낮)|최고|최저|현재"#,
+                    options: .caseInsensitive
+                ),
+                category: .dataLookup,
+                label: "lookup_ko"
+            ),
             // Metric-name fallback. If the user just mentions a metric
             // ("blutdruck?", "weight?"), treat as data-lookup.
             Pattern(
@@ -181,6 +238,14 @@ public actor MiniCoachAskClassifier {
                 ),
                 category: .dataLookup,
                 label: "metric_name"
+            ),
+            Pattern(
+                regex: try! NSRegularExpression(
+                    pattern: #"혈압|맥박|심박|체중|몸무게|수면|걸음|혈당|체온|산소"#,
+                    options: .caseInsensitive
+                ),
+                category: .dataLookup,
+                label: "metric_ko"
             )
         ]
     // swiftlint:enable force_try

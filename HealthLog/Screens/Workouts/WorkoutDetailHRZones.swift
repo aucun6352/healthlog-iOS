@@ -84,9 +84,9 @@ struct HRZoneBar: View {
         let h = total / 3600
         let m = (total % 3600) / 60
         let s = total % 60
-        if h > 0 { return "\(h) h \(m) min" }
-        if m > 0 { return "\(m) min" }
-        return "\(s) s"
+        if h > 0 { return String(localized: "workout.hrZones.duration.hoursMinutes \(h) \(m)") }
+        if m > 0 { return String(localized: "workout.hrZones.duration.minutes \(m)") }
+        return String(localized: "workout.hrZones.duration.seconds \(s)")
     }
 
     private var accessibilitySummary: Text {

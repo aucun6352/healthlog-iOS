@@ -178,12 +178,12 @@ extension CoachConversationStore {
     // MARK: - Server-arm helpers
 
     /// Resolve the two-letter locale code the server Coach expects
-    /// (`"de"` / `"en"`). Falls back to `"en"` for any other system
-    /// language so the server's refusal copy never renders in an
-    /// unsupported tongue.
+    /// (`"de"` / `"en"` / `"ko"`, the app's own languages). Falls back to
+    /// `"en"` for any other system language so the server's refusal copy
+    /// never renders in a language the app does not ship.
     func serverLocaleCode() -> String {
         let code = Locale.current.language.languageCode?.identifier ?? "en"
-        return code == "de" ? "de" : "en"
+        return ["de", "ko"].contains(code) ? code : "en"
     }
 
     /// Id of the most recently appended transcript entity — used by the

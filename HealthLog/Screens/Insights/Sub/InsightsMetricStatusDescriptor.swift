@@ -100,7 +100,7 @@ enum InsightsMetricStatusDescriptor {
             // rides on the card next to the chip.
             chipCaption: String(localized: "insights.metric.statusCard.notADiagnosis"),
             headlineValue: headline,
-            unitCaption: kind.unit,
+            unitCaption: MetricKind.displayUnitLabel(kind.unit),
             pctInTarget: digest?.bpPctInTarget,
             // b183 coherence — `bpPctInTarget` is the server's TRAILING 90-DAY
             // share (ESH-2023 band, comprehensive route). Label it "90 T" so the
@@ -183,7 +183,7 @@ enum InsightsMetricStatusDescriptor {
             // readings, not a diagnosis anyone made.
             chipCaption: String(localized: "insights.metric.statusCard.notADiagnosis"),
             headlineValue: headline,
-            unitCaption: kind.unit,
+            unitCaption: MetricKind.displayUnitLabel(kind.unit),
             pctInTarget: nil,
             // BMI carries no In-Range bar, so no window label is needed.
             inTargetWindowLabel: nil,

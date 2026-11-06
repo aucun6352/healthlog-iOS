@@ -305,6 +305,18 @@ enum TrendObservationPrompt {
         let deltaStr = delta.map { String(format: "%+.1f", locale: posix, $0) } ?? "—"
         let directionStr = direction.rawValue
         switch language {
+        case "ko":
+            return """
+            지표: \(metricLabel)
+            기간: 최근 30일 (측정 \(seriesCount)건)
+            시작: \(firstStr) \(unit)
+            끝: \(lastStr) \(unit)
+            변화: \(deltaStr) \(unit)
+            계산된 방향: \(directionStr)
+
+            데이터가 보여 주는 추세를 사실대로 설명하는 차분하고 관찰 중심의 문장 하나를 써. \
+            철저히 관찰만 해. 절대 진단, 예측, 처방하지 마.
+            """
         case "en":
             return """
             Metric: \(metricLabel)
@@ -337,6 +349,23 @@ enum TrendObservationPrompt {
         static func instructions(locale: Locale) -> Instructions {
             let language = locale.language.languageCode?.identifier ?? "de"
             switch language {
+            case "ko":
+                return Instructions {
+                    """
+                    너는 한국어 건강 기록 앱의 차분하고 사실적인 추세 관찰 목소리야. \
+                    항상 한국어 해요체로 써.
+
+                    절대 원칙:
+                    - 의학적 진단을 절대 내리지 않는다.
+                    - 복용량이나 치료 변경을 절대 권하지 않는다.
+                    - 약물 농도를 절대 해석하지 않는다.
+                    - 수치 사이의 인과 관계를 절대 주장하지 않는다.
+                    - 예측하지 않는다("오를 것이다", "내릴 것이다").
+                    - 수치가 이상해 보이면 의사와 상담하도록 안내한다.
+
+                    문체: 조언이 아니라 관찰. 한 문장. 데이터에 있는 구체적인 숫자를 쓴다.
+                    """
+                }
             case "en":
                 return Instructions {
                     """

@@ -226,6 +226,18 @@ enum MedicationExtractionPrompt {
     static func build(rawText: String, locale: Locale) -> String {
         let language = locale.language.languageCode?.identifier ?? "de"
         switch language {
+        case "ko":
+            return """
+            약 포장 사진의 OCR 텍스트:
+            \"\"\"
+            \(rawText)
+            \"\"\"
+
+            추출할 항목: 제품명, 함량, 제형, 제조사 단서. \
+            OCR 텍스트에 글자 그대로 나오는 부분만 써. \
+            항목이 분명하게 보이지 않으면 비워 둬. \
+            약의 용도, 적응증, 임상적 효과는 추론하지 마.
+            """
         case "en":
             return """
             OCR transcript from a medication-package photo:
@@ -258,6 +270,23 @@ enum MedicationExtractionPrompt {
         static func instructions(locale: Locale) -> Instructions {
             let language = locale.language.languageCode?.identifier ?? "de"
             switch language {
+            case "ko":
+                return Instructions {
+                    """
+                    너는 한국어 건강 기록 앱의 어휘 추출 도구야. \
+                    네 유일한 일은 OCR 텍스트에서 네 항목을 그대로 옮겨 적는 것이다: 제품명, 함량, 제형, 제조사 단서.
+
+                    절대 원칙:
+                    - OCR 텍스트에 글자 그대로 나오는 텍스트만 출력한다.
+                    - 약 이름을 지어내거나 바꿔 쓰지 않는다.
+                    - 약이 무슨 작용을 하는지 설명하지 않는다.
+                    - 진단, 예측, 처방을 하지 않는다.
+                    - 질환, 증상, 적응증을 언급하지 않는다.
+                    - 항목이 분명하게 보이지 않으면 비워 둔다.
+
+                    문체: 조언이 아니라 어휘 추출. 너는 의사가 아니라 옮겨 적는 기능이다.
+                    """
+                }
             case "en":
                 return Instructions {
                     """

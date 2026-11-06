@@ -39,6 +39,13 @@ private func respond(_ req: URLRequest, _ json: String, status: Int = 200) -> (H
 @Suite("WorkoutDetailView — HR-chart + route helpers")
 @MainActor
 struct WorkoutDetailHelperTests {
+    @Test("HR-zone duration labels preserve h/min/s output", arguments: [
+        (3900.0, "1 h 5 min"), (300.0, "5 min"), (45.0, "45 s")
+    ])
+    func hrZoneDurationLabels(seconds: Double, expected: String) {
+        #expect(HRZoneBar.durationLabel(seconds) == expected)
+    }
+
     @Test("HR a11y label summarises sample count + min/max bpm")
     func hrAccessibilityLabelSummary() {
         let base = Date(timeIntervalSinceReferenceDate: 0)

@@ -300,7 +300,7 @@ public final class ChartDetailStore {
     /// converted server-side, so iOS renders this label as-is and never
     /// re-converts. == `kind.unit` for kinds the server doesn't unit-stamp.
     public var displayUnit: String {
-        series?.resolvedUnit(for: kind) ?? kind.unit
+        MetricKind.displayUnitLabel(series?.resolvedUnit(for: kind) ?? kind.unit)
     }
 
     /// A360-5 C-1 — unit-aware display label for the chart surfaces.

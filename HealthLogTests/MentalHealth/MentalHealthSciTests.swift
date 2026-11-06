@@ -184,8 +184,8 @@ struct MentalHealthSciWireTests {
 /// The SCI's redistributed validated wording exists in English alone
 /// (``MentalHealthInstrument/validatedItemLocales`` == `["en"]`). Re-wording a
 /// validated instrument changes what it measures, so the eight items and their
-/// three stems are shown in the ORIGINAL English in every language, with a
-/// localised note explaining why. Everything AROUND the instrument — title,
+/// three stems stay in the ORIGINAL English in German, with a localised note
+/// explaining why. Korean has an explicitly unvalidated translation. Everything AROUND the instrument — title,
 /// description, bands, follow-up hint, buttons — is localised normally.
 ///
 /// Pure catalog / source reads, no network → no `.serialized`.
@@ -211,7 +211,7 @@ struct MentalHealthSciLocalisationTests {
         }
     }
 
-    @Test("Item wording is the English original in EVERY language — never freely translated")
+    @Test("German SCI item wording stays identical to the English original")
     func itemWordingIsNotTranslated() throws {
         let catalog = try ParityCatalog.load()
         for key in Self.itemKeys + Self.stemKeys {
@@ -222,6 +222,43 @@ struct MentalHealthSciLocalisationTests {
             // would change the measurement, so the original wording is shown.
             #expect(de == en, "\(key) was translated — the SCI wording must stay the English original")
         }
+    }
+
+    @Test("Korean SCI items and stems use Hangul rather than the English original")
+    func koreanItemWordingIsTranslated() throws {
+        let catalog = try ParityCatalog.load()
+        for key in Self.itemKeys + Self.stemKeys {
+            let entry = try #require(catalog.strings[key], "missing \(key)")
+            let ko = try #require(ParityCatalog.value(entry, language: "ko"), "missing Korean \(key)")
+            let en = try #require(ParityCatalog.value(entry, language: "en"))
+            #expect(ko.range(of: "[가-힣]", options: .regularExpression) != nil, "\(key): \(ko)")
+            #expect(ko != en, "\(key) must not fall back to English")
+        }
+    }
+
+    @Test("No Korean SCI catalog value uses an en dash for a range")
+    func koreanSCIRangesAvoidEnDash() throws {
+        let catalog = try ParityCatalog.load()
+        let keys = catalog.strings.keys.filter { $0.lowercased().contains("sci") }
+        #expect(!keys.isEmpty)
+        for key in keys {
+            let entry = try #require(catalog.strings[key])
+            let ko = try #require(ParityCatalog.value(entry, language: "ko"), "missing Korean \(key)")
+            #expect(!ko.contains("–"), "\(key): \(ko)")
+        }
+    }
+
+    @Test("The unvalidated-translation note exists in de, en and ko and explains the Korean wording")
+    func unvalidatedTranslationNoteIsLocalised() throws {
+        let catalog = try ParityCatalog.load()
+        let entry = try #require(catalog.strings["mentalHealth.unvalidatedTranslationNote"])
+        for language in ["de", "en", "ko"] {
+            let text = try #require(ParityCatalog.value(entry, language: language), "missing \(language) note")
+            #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        }
+        let ko = try #require(ParityCatalog.value(entry, language: "ko"))
+        #expect(ko != ParityCatalog.value(entry, language: "en"))
+        #expect(ko.range(of: "[가-힣]", options: .regularExpression) != nil)
     }
 
     @Test("The explanatory note IS localised — the stance is explained, not silently applied")
@@ -273,7 +310,7 @@ struct MentalHealthSciLocalisationTests {
         }
     }
 
-    @Test("Every SCI response option exists for all four anchor scales, 0–4, in both languages")
+    @Test("Every SCI response option exists for all anchor scales, 0–4, in de, en and ko")
     func allResponseOptionsArePresent() throws {
         let catalog = try ParityCatalog.load()
         let groups = try #require(MentalHealthInstrument.sci.optionGroups)
@@ -281,7 +318,7 @@ struct MentalHealthSciLocalisationTests {
             for value in 0 ... MentalHealthInstrument.sci.itemMax {
                 let key = "mentalHealth.sciOptions.\(group).\(value)"
                 let entry = try #require(catalog.strings[key], "missing catalog entry \(key)")
-                for language in ["de", "en"] {
+                for language in ["de", "en", "ko"] {
                     #expect(
                         ParityCatalog.value(entry, language: language)?.isEmpty == false,
                         "\(key) has no \(language) value"

@@ -93,8 +93,26 @@ public enum HLDateFormat: String, CaseIterable, Sendable {
     /// through `Date.FormatStyle` with the resolved ``formattingLocale`` so the
     /// field order follows the server pick while the device timezone governs
     /// the calendar day.
-    public func formatDate(_ date: Date, style: Style = .abbreviated) -> String {
-        date.formatted(Self.formatStyle(for: style).locale(formattingLocale))
+    public func formatDate(_ date: Date, style: Style = .abbreviated, appLocale: Locale = .current) -> String {
+        date.formatted(Self.formatStyle(for: style).locale(dateLocale(for: style, appLocale: appLocale)))
+    }
+
+    /// The locale a date style renders through. In a Korean app a pinned
+    /// order governs only the numeric style: the pinned locale would spell
+    /// month and weekday names in German or English, so the spelled-out
+    /// styles keep the app's own locale, as the server keeps month names on
+    /// the UI locale (`format-locale.ts`). Korean spells dates year first, so
+    /// the pick shows only in numeric dates there.
+    private func dateLocale(for style: Style, appLocale: Locale) -> Locale {
+        guard self != .auto, style != .numeric, Self.isKorean(appLocale) else {
+            return formattingLocale
+        }
+        return appLocale
+    }
+
+    /// `true` when the app renders in Korean.
+    static func isKorean(_ locale: Locale) -> Bool {
+        locale.language.languageCode?.identifier == "ko"
     }
 
     /// Format `date` honouring BOTH the date-order preference AND the
@@ -110,11 +128,26 @@ public enum HLDateFormat: String, CaseIterable, Sendable {
     public func formatDateTime(
         _ date: Date,
         style: Style = .abbreviated,
-        defaults: UserDefaults = .standard
+        defaults: UserDefaults = .standard,
+        appLocale: Locale = .current
     ) -> String {
+        let timeFormat = HLTimeFormat.current(defaults: defaults)
+        if self != .auto, Self.isKorean(appLocale) {
+            // Korean app with a pinned order: the date-order locale would put
+            // AM/PM and month names in German or English. Spelled-out styles
+            // render whole in Korean; the numeric style keeps the pinned date
+            // and appends the time in Korean (오전/오후).
+            let korean = Self.dateTimeLocale(dateOrder: appLocale, timeFormat: timeFormat)
+            guard style == .numeric else {
+                return date.formatted(Self.formatStyle(for: style, includeTime: true).locale(korean))
+            }
+            let datePart = date.formatted(Self.formatStyle(for: .numeric).locale(formattingLocale))
+            let timePart = date.formatted(Date.FormatStyle(date: .omitted, time: .shortened).locale(korean))
+            return "\(datePart) \(timePart)"
+        }
         let locale = Self.dateTimeLocale(
             dateOrder: formattingLocale,
-            timeFormat: HLTimeFormat.current(defaults: defaults)
+            timeFormat: timeFormat
         )
         return date.formatted(
             Self.formatStyle(for: style, includeTime: true).locale(locale)

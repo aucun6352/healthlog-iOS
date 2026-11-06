@@ -158,7 +158,7 @@ public extension UnitPreferences {
     /// The unit label `kind` reads in: the display unit of a converted family,
     /// otherwise the kind's canonical `unit`.
     func unitLabel(for kind: MetricKind) -> String {
-        transform(for: kind).suffix ?? kind.unit
+        transform(for: kind).suffix ?? MetricKind.displayUnitLabel(kind.unit)
     }
 }
 

@@ -426,6 +426,7 @@ public struct DoctorReportSpec: Sendable, Equatable {
 public enum ReportLocale: String, Sendable, Equatable, CaseIterable {
     case de
     case en
+    case ko
 
     public var bcp47: String {
         rawValue
@@ -435,6 +436,7 @@ public enum ReportLocale: String, Sendable, Equatable, CaseIterable {
         switch self {
         case .de: "de_DE"
         case .en: "en_US"
+        case .ko: "ko_KR"
         }
     }
 }
@@ -483,11 +485,13 @@ public struct DoctorReportSectionSelection: Sendable, Equatable {
 public enum DoctorReportDisclaimer {
     public static let de = "Lokaler Export, kein Server beteiligt, auf-Geraet erzeugt, kein medizinisches Dokument"
     public static let en = "Local export, no server involved, generated on-device, not a medical document"
+    public static let ko = "로컬 내보내기, 서버 미사용, 기기에서 생성, 의료 문서 아님"
 
     public static func text(for locale: ReportLocale) -> String {
         switch locale {
         case .de: de
         case .en: en
+        case .ko: ko
         }
     }
 }

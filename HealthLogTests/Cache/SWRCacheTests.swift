@@ -214,6 +214,16 @@ struct CacheInvalidatorMatrixTests {
         #expect(keys.contains(.measurementsRecent(limit: 50)))
     }
 
+    @Test("Measurement changes invalidate metric insights in every app language", arguments: MetricKind.allCases)
+    func measurementChangeInvalidatesAllLanguages(kind: MetricKind) throws {
+        let zone = try #require(TimeZone(identifier: "UTC"))
+        let now = Date(timeIntervalSince1970: 1_781_697_600)
+        let keys = MutationKind.measurementChange(kind: kind).affectedKeys(profileTimeZone: zone, now: now)
+        for locale in ["de", "en", "ko"] {
+            #expect(keys.contains(.metricInsights(kind: kind, locale: locale)), "missing \(kind) / \(locale)")
+        }
+    }
+
     @Test("medicationIntakeChange invalidates today-intakes + healthScore")
     func medicationIntakeFanOut() throws {
         let zone = try #require(TimeZone(identifier: "Europe/Berlin"))

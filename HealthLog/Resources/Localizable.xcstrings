@@ -54499,7 +54499,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "h"
+            "value": "시간"
           }
         }
       }
@@ -85925,7 +85925,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… how long does it take you to fall asleep?"
+            "value": "… 잠드는 데 얼마나 걸립니까?"
           }
         }
       }
@@ -85948,7 +85948,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… if you then wake up during the night … how long are you awake for in total? (add all the wakenings up)"
+            "value": "… 그런 다음 밤중에 깨는 경우 … 모두 합해 얼마나 오래 깨어 있습니까? (깨어 있던 시간을 모두 더하십시오)"
           }
         }
       }
@@ -85971,7 +85971,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… how many nights a week do you have a problem with your sleep?"
+            "value": "… 일주일에 며칠 밤 수면에 문제가 있습니까?"
           }
         }
       }
@@ -85994,7 +85994,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… how would you rate your sleep quality?"
+            "value": "… 수면의 질을 어떻게 평가하시겠습니까?"
           }
         }
       }
@@ -86017,7 +86017,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… affected your mood, energy, or relationships?"
+            "value": "… 기분, 기력 또는 대인 관계에 어느 정도 영향을 주었습니까?"
           }
         }
       }
@@ -86040,7 +86040,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… affected your concentration, productivity, or ability to stay awake?"
+            "value": "… 집중력, 생산성 또는 깨어 있는 능력에 어느 정도 영향을 주었습니까?"
           }
         }
       }
@@ -86063,7 +86063,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… troubled you in general?"
+            "value": "… 전반적으로 어느 정도 괴로움을 주었습니까?"
           }
         }
       }
@@ -86086,7 +86086,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "… how long have you had a problem with your sleep?"
+            "value": "… 수면 문제가 얼마나 오래되었습니까?"
           }
         }
       }
@@ -86615,7 +86615,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "≥ 61 min"
+            "value": "61분 이상"
           }
         }
       }
@@ -86638,7 +86638,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "46 to 60 min"
+            "value": "46~60분"
           }
         }
       }
@@ -86661,7 +86661,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "31 to 45 min"
+            "value": "31~45분"
           }
         }
       }
@@ -86684,7 +86684,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "16 to 30 min"
+            "value": "16~30분"
           }
         }
       }
@@ -86707,7 +86707,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "0 to 15 min"
+            "value": "0~15분"
           }
         }
       }
@@ -86730,7 +86730,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Very much"
+            "value": "매우 많이"
           }
         }
       }
@@ -86753,7 +86753,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Much"
+            "value": "많이"
           }
         }
       }
@@ -86776,7 +86776,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Somewhat"
+            "value": "어느 정도"
           }
         }
       }
@@ -86799,7 +86799,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "A little"
+            "value": "약간"
           }
         }
       }
@@ -86822,7 +86822,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Not at all"
+            "value": "전혀 아니다"
           }
         }
       }
@@ -86845,7 +86845,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "5 to 7"
+            "value": "5~7"
           }
         }
       }
@@ -86937,7 +86937,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "0 to 1"
+            "value": "0~1"
           }
         }
       }
@@ -86960,7 +86960,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "> 1 year"
+            "value": "1년 초과"
           }
         }
       }
@@ -86983,7 +86983,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "7 to 12 months"
+            "value": "7~12개월"
           }
         }
       }
@@ -87006,7 +87006,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "3 to 6 months"
+            "value": "3~6개월"
           }
         }
       }
@@ -87029,7 +87029,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "1 to 2 months"
+            "value": "1~2개월"
           }
         }
       }
@@ -87052,7 +87052,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "I don't have a problem / < 1 month"
+            "value": "문제 없음 / 1개월 미만"
           }
         }
       }
@@ -87075,7 +87075,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Very poor"
+            "value": "매우 나쁨"
           }
         }
       }
@@ -87098,7 +87098,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Poor"
+            "value": "나쁨"
           }
         }
       }
@@ -87121,7 +87121,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Average"
+            "value": "보통"
           }
         }
       }
@@ -87144,7 +87144,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Good"
+            "value": "좋음"
           }
         }
       }
@@ -87167,7 +87167,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Very good"
+            "value": "매우 좋음"
           }
         }
       }
@@ -87259,7 +87259,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finally …"
+            "value": "마지막으로 …"
           }
         }
       }
@@ -87282,7 +87282,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Thinking about the past month, to what extent has poor sleep …"
+            "value": "지난 한 달을 생각해 볼 때, 잠을 잘 자지 못한 것이 …"
           }
         }
       }
@@ -87305,7 +87305,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Thinking about a typical night in the last month …"
+            "value": "지난 한 달 동안의 평소 밤을 생각해 볼 때 …"
           }
         }
       }
@@ -87398,6 +87398,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "이 설문은 영어로 검증된 도구예요. 문항은 원문 영어 표현 그대로 보여줘요."
+          }
+        }
+      }
+    },
+    "mentalHealth.unvalidatedTranslationNote": {
+      "comment": "Shown above a questionnaire whose items are HealthLog's own translation, not a validated one (server messages mentalHealth.wording.unvalidatedNote).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Übersetzung ist nicht wissenschaftlich validiert; nimm das Ergebnis als Orientierung."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This translation has not been scientifically validated; treat the result as orientation."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이 번역은 과학적으로 검증되지 않았어요. 결과는 참고용으로만 봐 주세요."
           }
         }
       }
@@ -87703,7 +87727,79 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
+            "value": "분"
+          }
+        }
+      }
+    },
+    "h": {
+      "comment": "Unit — hours",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "h"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "h"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시간"
+          }
+        }
+      }
+    },
+    "unit.display.hours": {
+      "comment": "Display label for the canonical hour unit \"h\" (MetricKind.displayUnitLabel).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "h"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "h"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시간"
+          }
+        }
+      }
+    },
+    "unit.display.minutes": {
+      "comment": "Display label for the canonical minute unit \"min\" (MetricKind.displayUnitLabel).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
             "value": "min"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "min"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "분"
           }
         }
       }
@@ -111054,6 +111150,78 @@
         }
       }
     },
+    "workout.hrZones.duration.hoursMinutes %lld %lld": {
+      "comment": "Heart-rate zone duration, hours and minutes.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld h %2$lld min"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld h %2$lld min"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld시간 %2$lld분"
+          }
+        }
+      }
+    },
+    "workout.hrZones.duration.minutes %lld": {
+      "comment": "Heart-rate zone duration, minutes.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld분"
+          }
+        }
+      }
+    },
+    "workout.hrZones.duration.seconds %lld": {
+      "comment": "Heart-rate zone duration, seconds.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld초"
+          }
+        }
+      }
+    },
     "workout.splits.km %lld": {
       "comment": "7.8 — WorkoutDetailView split row label. %lld is the 1-based kilometre index.",
       "extractionState": "manual",
@@ -114067,7 +114235,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "성인 목표는 ≥ 7 h예요. 고령자는 조금 덜 필요할 수 있어요."
+            "value": "성인 목표는 7시간 이상이에요. 고령자는 조금 덜 필요할 수 있어요."
           }
         }
       }
@@ -114907,7 +115075,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "전문가 합의: 18~64세 성인은 7~9 h, 65세 이상은 7~8 h를 권장해요."
+            "value": "전문가 합의: 18~64세 성인은 7~9시간, 65세 이상은 7~8시간을 권장해요."
           }
         }
       }

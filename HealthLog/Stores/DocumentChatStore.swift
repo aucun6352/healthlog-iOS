@@ -213,8 +213,9 @@ public final class DocumentChatStore {
     // MARK: - Helpers
 
     /// The two-letter locale the server renders its refusal / limit copy in
-    /// (`"de"` / `"en"`), mirroring the Coach's `serverLocaleCode()`.
+    /// (`"de"` / `"en"` / `"ko"`), mirroring the Coach's `serverLocaleCode()`.
     static var localeCode: String {
-        Locale.current.language.languageCode?.identifier == "de" ? "de" : "en"
+        let code = Locale.current.language.languageCode?.identifier ?? "en"
+        return ["de", "ko"].contains(code) ? code : "en"
     }
 }

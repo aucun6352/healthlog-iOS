@@ -99,6 +99,146 @@ struct HLDateFormatTests {
     }
 }
 
+/// Korean spelled-out dates keep the app language while numeric dates keep
+/// the chosen field order. The pre-change Foundation styles are the de/en
+/// regression oracle. Production uses TimeZone.current without an injection
+/// seam, so pin a Gregorian civil date in one captured device timezone and use
+/// that same timezone for every reference formatter (no global mutation).
+@Suite("HLDateFormat — Korean app locale", .serialized)
+@MainActor
+struct HLDateFormatKoreanTests {
+    nonisolated private static let pinned: [HLDateFormat] = [.dayMonthYear, .monthDayYear, .yearMonthDay]
+    private static let styles: [HLDateFormat.Style] = [.numeric, .abbreviated, .long, .complete]
+    private let ko = Locale(identifier: "ko_KR")
+    private let timeZone = TimeZone.current
+
+    private func withSample(_ body: (Date) throws -> Void) throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let date = try #require(calendar.date(from: DateComponents(year: 2026, month: 6, day: 17, hour: 13, minute: 5)))
+        try body(date)
+    }
+
+    private func legacyStyle(_ style: HLDateFormat.Style, locale: Locale, time: Bool = false) -> Date.FormatStyle {
+        let dateStyle: Date.FormatStyle.DateStyle = switch style {
+        case .numeric: .numeric
+        case .abbreviated: .abbreviated
+        case .long: .long
+        case .complete: .complete
+        }
+        return Date.FormatStyle(
+            date: dateStyle, time: time ? .shortened : .omitted,
+            locale: locale, calendar: Calendar(identifier: .gregorian), timeZone: timeZone
+        )
+    }
+
+    private func numericDate(_ date: Date, for order: HLDateFormat) -> String {
+        date.formatted(legacyStyle(.numeric, locale: order.formattingLocale))
+    }
+
+    @Test("All pinned orders spell months and weekdays in Korean", arguments: pinned)
+    func koreanSpelledDates(order: HLDateFormat) throws {
+        try withSample { date in
+            for style in [HLDateFormat.Style.abbreviated, .long, .complete] {
+                let text = order.formatDate(date, style: style, appLocale: ko)
+                #expect(text.contains("월"), "\(order) / \(style): \(text)")
+                #expect(text.range(of: "[A-Za-z]", options: .regularExpression) == nil, "\(text)")
+            }
+        }
+    }
+
+    @Test("Korean numeric dates preserve each pinned order", arguments: pinned)
+    func koreanNumericDates(order: HLDateFormat) throws {
+        try withSample { date in
+            let text = order.formatDate(date, style: .numeric, appLocale: ko)
+            #expect(text == numericDate(date, for: order))
+            // ICU versions differ in zero-padding; field order and separators
+            // must remain pinned in either case (17.6.2026 / 17.06.2026).
+            let separator: Character = order == .dayMonthYear ? "." : order == .monthDayYear ? "/" : "-"
+            let expected: [Int] = switch order {
+            case .dayMonthYear: [17, 6, 2026]
+            case .monthDayYear: [6, 17, 2026]
+            case .yearMonthDay: [2026, 6, 17]
+            case .auto: []
+            }
+            #expect(text.split(separator: separator).compactMap { Int($0) } == expected)
+        }
+    }
+
+    @Test("Korean date-times honour H12/H24 and preserve pinned numeric dates", arguments: pinned)
+    func koreanDateTimes(order: HLDateFormat) throws {
+        let suite = "HLDateFormatKoreanTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        try withSample { date in
+            for preference in [HLTimeFormat.twelveHour, .twentyFourHour] {
+                defaults.set(preference.rawValue, forKey: HLTimeFormat.defaultsKey)
+                for style in Self.styles {
+                    let text = order.formatDateTime(date, style: style, defaults: defaults, appLocale: ko)
+                    #expect(text.range(of: "[A-Za-z]", options: .regularExpression) == nil, "\(text)")
+                    if preference == .twelveHour {
+                        #expect(text.contains("오후"), "13:05 must use the Korean PM marker: \(text)")
+                    } else {
+                        #expect(text.contains("13:05"))
+                        #expect(!text.contains("오전") && !text.contains("오후"))
+                    }
+                    if style == .numeric {
+                        let time = preference == .twelveHour ? "오후 1:05" : "13:05"
+                        #expect(text == "\(numericDate(date, for: order)) \(time)")
+                    } else {
+                        #expect(text.contains("월"))
+                    }
+                }
+            }
+        }
+    }
+
+    @Test("German and English app locales keep the pre-change pinned-locale behaviour", arguments: ["de_DE", "en_US"])
+    func pinnedLocaleRegression(appLocale: String) throws {
+        let suite = "HLDateFormatKoreanTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        try withSample { date in
+            for order in Self.pinned {
+                for style in Self.styles {
+                    let expected = date.formatted(legacyStyle(style, locale: order.formattingLocale))
+                    #expect(order.formatDate(date, style: style, appLocale: Locale(identifier: appLocale)) == expected)
+                    for preference in HLTimeFormat.allCases {
+                        defaults.set(preference.rawValue, forKey: HLTimeFormat.defaultsKey)
+                        var components = Locale.Components(locale: order.formattingLocale)
+                        if preference != .auto {
+                            components.hourCycle = preference == .twelveHour ? .oneToTwelve : .zeroToTwentyThree
+                        }
+                        let expectedTime = date.formatted(legacyStyle(style, locale: Locale(components: components), time: true))
+                        let actual = order.formatDateTime(date, style: style, defaults: defaults, appLocale: Locale(identifier: appLocale))
+                        #expect(actual == expectedTime, "\(order) / \(style) / \(preference)")
+                    }
+                }
+            }
+        }
+    }
+
+    @Test("AUTO continues to use the device locale regardless of the app-locale argument")
+    func autoIsUnaffected() throws {
+        let suite = "HLDateFormatKoreanTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        try withSample { date in
+            for style in Self.styles {
+                for appLocale in [ko, Locale(identifier: "de_DE"), Locale(identifier: "en_US")] {
+                    #expect(HLDateFormat.auto.formatDate(date, style: style, appLocale: appLocale)
+                        == date.formatted(legacyStyle(style, locale: .current)))
+                    for preference in HLTimeFormat.allCases {
+                        defaults.set(preference.rawValue, forKey: HLTimeFormat.defaultsKey)
+                        let actual = HLDateFormat.auto.formatDateTime(date, style: style, defaults: defaults, appLocale: appLocale)
+                        #expect(actual == date.formatted(legacyStyle(style, locale: preference.formattingLocale, time: true)))
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// b215 — locks the compact **day + month** helper that appends the year ONLY
 /// when the date isn't in `now`'s calendar year, so historical rows (the
 /// workouts overview, the measurement feed) are never ambiguous about which

@@ -7,6 +7,34 @@ import Testing
 /// Pure contract tests: no network and no persisted item answers.
 @Suite("Mental-health instrument contract")
 struct MentalHealthInstrumentTests {
+    @Test("Korean locale spellings select validated PHQ-9, GAD-7 and WHO-5 wording", arguments: ["ko", "ko-KR", "ko_KR"])
+    func koreanValidatedItems(locale: String) {
+        for instrument in [MentalHealthInstrument.phq9, .gad7, .who5] {
+            #expect(instrument.hasValidatedItems(locale: locale), "\(instrument) / \(locale)")
+        }
+        #expect(!MentalHealthInstrument.sci.hasValidatedItems(locale: locale))
+    }
+
+    @Test("Existing German and English validated-item decisions stay unchanged", arguments: [
+        "de", "de-DE", "de_DE", "en", "en-US", "en_US"
+    ])
+    func validatedLanguageRegression(locale: String) {
+        for instrument in [MentalHealthInstrument.phq9, .gad7, .who5] {
+            #expect(instrument.hasValidatedItems(locale: locale), "\(instrument) / \(locale)")
+        }
+        #expect(MentalHealthInstrument.sci.hasValidatedItems(locale: locale) == locale.hasPrefix("en"))
+    }
+
+    @Test("Only Korean SCI wording needs the unvalidated-translation note", arguments: [
+        "ko", "ko-KR", "ko_KR", "de", "de-DE", "en", "en_US", "es", "fr", "it", "pl"
+    ])
+    func unvalidatedTranslationIsKoreanSCIOnly(locale: String) {
+        for instrument in MentalHealthInstrument.allCases {
+            let expected = instrument == .sci && ["ko", "ko-KR", "ko_KR"].contains(locale)
+            #expect(instrument.hasUnvalidatedTranslation(locale: locale) == expected, "\(instrument) / \(locale)")
+        }
+    }
+
     // MARK: - Item counts
 
     @Test("PHQ-9 has 9 scored items, GAD-7 has 7")

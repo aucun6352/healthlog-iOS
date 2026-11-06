@@ -138,14 +138,31 @@ struct B4zFinalPassTests {
     @Test("Personal records speak the reader's language and keep their labels whole")
     func personalRecordsReadInGerman() throws {
         #expect(PersonalRecordDTO.localizedUnit("steps") == String(localized: "dashboard.metric.unit.steps"))
+        #expect(PersonalRecordDTO.localizedUnit("Steps") == String(localized: "dashboard.metric.unit.steps"))
+        #expect(PersonalRecordDTO.localizedUnit("h") == "h")
+        #expect(PersonalRecordDTO.localizedUnit("min") == "min")
+        #expect(PersonalRecordDTO.localizedUnit(" h ") == " h ")
         #expect(PersonalRecordDTO.localizedUnit("kg") == "kg")
         #expect(PersonalRecordDTO.localizedUnit("bpm") == "bpm")
+        #expect(PersonalRecordDTO.localizedUnit("km") == "km")
+        #expect(PersonalRecordDTO.localizedUnit(" kg ") == " kg ")
         let card = try Self.source("HealthLog/Screens/PersonalRecords/RecordCard.swift")
         #expect(card.contains("HLBadge(String(localized: \"New record!\")"))
         #expect(try Self.catalogValue("New record!", "de") == "Neuer Rekord!")
         let strip = try Self.source("HealthLog/Screens/PersonalRecords/MilestoneStrip.swift")
         #expect(strip.contains(".frame(width: 96)"))
         #expect(!strip.contains(".frame(maxWidth: 80)"))
+    }
+
+    @Test("A sleep personal record displays hours in German with standard units")
+    func sleepPersonalRecordDisplaysHoursInGerman() {
+        let record = PersonalRecordDTO(
+            id: "r-sleep", userId: "u1", metricType: "SLEEP_DURATION", metricSlot: nil, direction: .max,
+            value: 8, unit: "h", achievedAt: Date(timeIntervalSince1970: 1_780_000_000),
+            sourceMeasurementId: nil, source: "MANUAL", externalId: nil,
+            createdAt: Date(timeIntervalSince1970: 1_780_000_000)
+        )
+        #expect(record.displayUnit(UnitPreferences.standard) == "h")
     }
 
     @Test("The Insights medication cards name a kind only when there is a real one")

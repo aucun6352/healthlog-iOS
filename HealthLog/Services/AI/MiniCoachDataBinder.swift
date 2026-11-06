@@ -44,9 +44,12 @@ struct MiniCoachDataBinder {
     ) -> String {
         let language = locale.language.languageCode?.identifier ?? "de"
         if measurements.isEmpty, moods.isEmpty {
-            return language == "en"
-                ? "(no measurements or mood entries available in the window)"
-                : "(keine Messungen oder Stimmungseinträge im Zeitfenster verfügbar)"
+            return pick(
+                language,
+                en: "(no measurements or mood entries available in the window)",
+                ko: "(기간 내 측정값이나 기분 기록 없음)",
+                de: "(keine Messungen oder Stimmungseinträge im Zeitfenster verfügbar)"
+            )
         }
 
         switch category {
@@ -82,13 +85,16 @@ struct MiniCoachDataBinder {
         // latest NAMEABLE entry; the coach is handed no mood line at all when
         // this build can name none.
         if let latestMood = MoodEntry.scored(moods).max(by: { $0.entry.recordedAt < $1.entry.recordedAt }) {
-            let header = language == "en" ? "mood" : "Stimmung"
+            let header = pick(language, en: "mood", ko: "기분", de: "Stimmung")
             lines.append("\(header): \(latestMood.score)/5")
         }
         let count = measurements.count
-        let header = language == "en"
-            ? "Latest reading per metric (\(count) total measurements):"
-            : "Letzter Wert je Metrik (\(count) Messungen insgesamt):"
+        let header = pick(
+            language,
+            en: "Latest reading per metric (\(count) total measurements):",
+            ko: "지표별 최근 값(전체 측정 \(count)건):",
+            de: "Letzter Wert je Metrik (\(count) Messungen insgesamt):"
+        )
         return header + "\n" + lines.joined(separator: "\n")
     }
 
@@ -102,9 +108,12 @@ struct MiniCoachDataBinder {
         let cutoff = now.addingTimeInterval(-7 * 24 * 3600)
         let window = measurements.filter { $0.recordedAt >= cutoff }
         let moodWindow = moods.filter { $0.recordedAt >= cutoff }
-        let header = language == "en"
-            ? "Window: last 7 days (\(window.count) measurements, \(moodWindow.count) mood entries)"
-            : "Zeitraum: letzte 7 Tage (\(window.count) Messungen, \(moodWindow.count) Stimmungseinträge)"
+        let header = pick(
+            language,
+            en: "Window: last 7 days (\(window.count) measurements, \(moodWindow.count) mood entries)",
+            ko: "기간: 최근 7일(측정 \(window.count)건, 기분 기록 \(moodWindow.count)건)",
+            de: "Zeitraum: letzte 7 Tage (\(window.count) Messungen, \(moodWindow.count) Stimmungseinträge)"
+        )
         var lines: [String] = [header]
         let grouped = Dictionary(grouping: window, by: \.kind)
         // Audit B-4 — `selectableCases`, not `allCases`: the coach must not be
@@ -118,7 +127,7 @@ struct MiniCoachDataBinder {
             let scores = MoodEntry.scored(moodWindow).map(\.score)
             if let minScore = scores.min(), let maxScore = scores.max() {
                 let avg = Double(scores.reduce(0, +)) / Double(scores.count)
-                let label = language == "en" ? "mood" : "Stimmung"
+                let label = pick(language, en: "mood", ko: "기분", de: "Stimmung")
                 lines.append(String(format: "%@: min %d, max %d, avg %.1f", label, minScore, maxScore, avg))
             }
         }
@@ -136,18 +145,24 @@ struct MiniCoachDataBinder {
     ) -> String {
         let sorted = measurements.sorted(by: { $0.recordedAt < $1.recordedAt })
         guard let first = sorted.first, let last = sorted.last else {
-            return language == "en"
-                ? "(no measurements in window)"
-                : "(keine Messungen im Zeitfenster)"
+            return pick(
+                language,
+                en: "(no measurements in window)",
+                ko: "(기간 내 측정값 없음)",
+                de: "(keine Messungen im Zeitfenster)"
+            )
         }
-        let header = language == "en"
-            ? "History window: \(sorted.count) measurements between earliest and latest entry"
-            : "Verlaufsfenster: \(sorted.count) Messungen zwischen erstem und letztem Eintrag"
+        let header = pick(
+            language,
+            en: "History window: \(sorted.count) measurements between earliest and latest entry",
+            ko: "기록 기간: 첫 기록과 마지막 기록 사이 측정 \(sorted.count)건",
+            de: "Verlaufsfenster: \(sorted.count) Messungen zwischen erstem und letztem Eintrag"
+        )
         var lines = [header]
-        lines.append((language == "en" ? "earliest: " : "frühester Eintrag: ") + format(measurement: first, language: language))
-        lines.append((language == "en" ? "latest: " : "letzter Eintrag: ") + format(measurement: last, language: language))
+        lines.append(pick(language, en: "earliest: ", ko: "첫 기록: ", de: "frühester Eintrag: ") + format(measurement: first, language: language))
+        lines.append(pick(language, en: "latest: ", ko: "마지막 기록: ", de: "letzter Eintrag: ") + format(measurement: last, language: language))
         if !moods.isEmpty {
-            lines.append((language == "en" ? "mood entries in window: " : "Stimmungseinträge im Fenster: ") + String(moods.count))
+            lines.append(pick(language, en: "mood entries in window: ", ko: "기간 내 기분 기록: ", de: "Stimmungseinträge im Fenster: ") + String(moods.count))
         }
         return lines.joined(separator: "\n")
     }
@@ -163,9 +178,12 @@ struct MiniCoachDataBinder {
         let twoWeeksAgo = now.addingTimeInterval(-14 * 24 * 3600)
         let recent = measurements.filter { $0.recordedAt >= weekAgo }
         let prior = measurements.filter { $0.recordedAt >= twoWeeksAgo && $0.recordedAt < weekAgo }
-        let header = language == "en"
-            ? "Comparison: last 7 days (recent, \(recent.count) measurements) vs. previous 7 days (prior, \(prior.count) measurements)"
-            : "Vergleich: letzte 7 Tage (jetzt, \(recent.count) Messungen) vs. vorletzte 7 Tage (davor, \(prior.count) Messungen)"
+        let header = pick(
+            language,
+            en: "Comparison: last 7 days (recent, \(recent.count) measurements) vs. previous 7 days (prior, \(prior.count) measurements)",
+            ko: "비교: 최근 7일(최근, 측정 \(recent.count)건)과 그 전 7일(이전, 측정 \(prior.count)건)",
+            de: "Vergleich: letzte 7 Tage (jetzt, \(recent.count) Messungen) vs. vorletzte 7 Tage (davor, \(prior.count) Messungen)"
+        )
         var lines: [String] = [header]
         let recentGrouped = Dictionary(grouping: recent, by: \.kind)
         let priorGrouped = Dictionary(grouping: prior, by: \.kind)
@@ -176,18 +194,34 @@ struct MiniCoachDataBinder {
             let priorGroup = priorGrouped[kind] ?? []
             guard !(recentGroup.isEmpty && priorGroup.isEmpty) else { continue }
             let label = displayName(for: kind, language: language)
-            lines.append("\(label): jetzt \(recentGroup.count), davor \(priorGroup.count)")
+            lines.append(comparisonLine(label, recent: recentGroup.count, prior: priorGroup.count, language: language))
         }
         if !moods.isEmpty {
             let recentMood = moods.filter { $0.recordedAt >= weekAgo }.count
             let priorMood = moods.filter { $0.recordedAt >= twoWeeksAgo && $0.recordedAt < weekAgo }.count
-            let label = language == "en" ? "mood entries" : "Stimmungseinträge"
-            lines.append("\(label): jetzt \(recentMood), davor \(priorMood)")
+            let label = pick(language, en: "mood entries", ko: "기분 기록", de: "Stimmungseinträge")
+            lines.append(comparisonLine(label, recent: recentMood, prior: priorMood, language: language))
         }
         return lines.joined(separator: "\n")
     }
 
     // MARK: - Formatting helpers
+
+    /// The digest wording for the prompt language; German for any other.
+    private func pick(_ language: String, en: String, ko: String, de: String) -> String {
+        switch language {
+        case "en": en
+        case "ko": ko
+        default: de
+        }
+    }
+
+    /// One comparison row. de/en keep the "jetzt / davor" labels they always had.
+    private func comparisonLine(_ label: String, recent: Int, prior: Int, language: String) -> String {
+        language == "ko"
+            ? "\(label): 최근 \(recent)건, 이전 \(prior)건"
+            : "\(label): jetzt \(recent), davor \(prior)"
+    }
 
     private func format(measurement: Measurement, language: String) -> String {
         let label = displayName(for: measurement.kind, language: language)

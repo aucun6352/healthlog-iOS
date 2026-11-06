@@ -242,9 +242,10 @@ struct MDRSafetyFilterExemptionsTests {
 
     // MARK: - Nothing else moved
 
-    @Test("the matrix neither grew nor shrank")
+    @Test("the matrix adds Korean patterns without changing its row set")
     func matrixSizeUnchanged() {
-        #expect(MDRSafetyFilter.patternCount == 25, "22 before 1.0.3 + 2 (R21) + 1 (R23)")
+        #expect(MDRSafetyFilter.patternCount == 40, "25 existing German/English patterns + 15 Korean patterns")
+        #expect(MDRSafetyFilter.matrixRows() == Set([0, 7, 8, 9, 11, 14]), "Korean patterns reuse the existing matrix rows")
     }
 
     @Test("the untouched rows still refuse")
